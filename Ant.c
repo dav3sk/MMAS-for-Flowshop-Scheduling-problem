@@ -18,7 +18,15 @@ void gerarFormigasIniciais(formiga *colonia) {
 	avaliarColonia(colonia);
 }
 
+void configurarFormigas(formiga *colonia) {
+	selecionarMelhorFormiga(colonia);
+	gerarFormiga(&melhorFormigaGlobal);
+	copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
+}
+
 void inicializarFeromonio() {
+	atualizarFeromonioMaxMin();
+
 	feromonio = (double **)malloc(sizeof(double *) * N_JOBS);
     feromonio[0] = (double *)malloc(sizeof(double) * N_JOBS * N_JOBS);
 
@@ -33,7 +41,7 @@ void inicializarFeromonio() {
 }
 
 void atualizarFeromonioMaxMin() {
-	FEROMONIO_MAX = ( 1 / (1 - TAXA_EVAPORACAO) ) * ( 1 / (double)(melhorFormigaGlobal->fitness) );
+	FEROMONIO_MAX = ( 1 / (1 - TAXA_EVAPORACAO) ) * ( 1 / (double)(melhorFormigaGlobal.fitness) );
 	FEROMONIO_MIN = FEROMONIO_MAX / 5;
 }
 
@@ -94,6 +102,14 @@ void mostrarColonia(formiga *colonia) {
 void gerarFormiga(formiga* novaFormiga) {
 	novaFormiga->solucao = malloc(sizeof(int) * N_JOBS);
 	novaFormiga->fitness = 0;
+}
+
+void copiarFormiga(formiga* destino, formiga *fonte) {
+	for(int j=0 ; j < N_JOBS ; ++j) {
+		destino->solucao = fonte->solucao;
+	}
+
+	destino->fitness = fonte->fitness;
 }
 
 void avaliarFormiga(formiga *formiga) {
@@ -169,8 +185,8 @@ void selecionarMelhorFormiga(formiga *colonia) {
 }
 
 void selecionarMelhorGlobal() {
-	if(melhorFormiga->fitness < melhorFormigaGlobal->fitness) {
-		melhorFormigaGlobal = melhorFormiga;
+	if(melhorFormiga->fitness < melhorFormigaGlobal.fitness) {
+		copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
 		atualizarFeromonioMaxMin();
 	}
 }
@@ -304,7 +320,7 @@ void resultados(formiga *colonia) {
 	//mostrarFeromonio();
     printf(">Tempo de execucao: %.2lfm", (((double)fim - (double)inicio)/CLOCKS_PER_SEC)/60 );
 	printf("\n>Melhor formiga = ");
-	mostraFormiga(melhorFormigaGlobal);
+	mostraFormiga(&melhorFormigaGlobal);
 	
 	printf("\n>Fitness medio = %.2lf\n\n", media/N_FORMIGAS);
 }
