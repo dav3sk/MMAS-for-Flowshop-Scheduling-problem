@@ -25,9 +25,10 @@ typedef struct individuo{
 } formiga;
 
 formiga *melhorFormiga;
-formiga *melhorFormigaGlobal;
+formiga melhorFormigaGlobal;
 
 void gerarFormigasIniciais(formiga *colonia);
+void configurarFormigas(formiga *colonia);
 void inicializarFeromonio();
 void atualizarFeromonioMaxMin();
 void atualizarFeromonio();
@@ -37,6 +38,7 @@ void avaliarColonia(formiga *colonia);
 void mostrarColonia(formiga *colonia);
 
 void gerarFormiga(formiga* novaFormiga);
+void copiarFormiga(formiga* destino, formiga *fonte);
 void avaliarFormiga(formiga *formiga);
 formiga construirFormiga();
 void selecionarMelhorFormiga(formiga *colonia);

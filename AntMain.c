@@ -22,9 +22,8 @@ int main() {
 	formiga colonia[N_FORMIGAS];
 
 	gerarFormigasIniciais(colonia);
-	selecionarMelhorFormiga(colonia);
-	melhorFormigaGlobal = melhorFormiga;
-	atualizarFeromonioMaxMin();
+	configurarFormigas(colonia);
+
 	inicializarFeromonio();
 
 	mostrarFeromonio();
