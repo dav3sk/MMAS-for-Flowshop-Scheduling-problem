@@ -11,6 +11,7 @@ double somatorio(double *vetor, int tam);
 
 void misturarVetor(int *vetor, int tamanho){
 	size_t i;
+	srand(time(NULL));
 	for (i = 0; i < tamanho; ++i) {
 		size_t j = i + rand() / (RAND_MAX / (tamanho - i) + 1);
 		int t = vetor[j];

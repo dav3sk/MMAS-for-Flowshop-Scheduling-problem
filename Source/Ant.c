@@ -35,7 +35,7 @@ void inicializarFeromonio() {
 
 	for(int m=0 ; m < N_JOBS ; ++m) {
 		for(int j=0 ; j < N_JOBS ; ++j) {
-			feromonio[m][j] = FEROMONIO_MIN;
+			feromonio[m][j] = FEROMONIO_MAX;
 		}
 	}
 }
@@ -48,13 +48,13 @@ void atualizarFeromonioMaxMin() {
 void atualizarFeromonio() {
 	int fitnessMelhorFormiga = melhorFormiga->fitness;
 
-	for(int j=0 ; j < N_JOBS ; ++j) {
-		feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
-	}
+	// for(int j=0 ; j < N_JOBS ; ++j) {
+	// 	feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
+	// }
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		for(int i=0 ; i < N_JOBS ; ++i) {
-			feromonio[j][i] = (TAXA_EVAPORACAO * feromonio[j][i]) + (1 / fitnessMelhorFormiga);
+			feromonio[j][i] = (TAXA_EVAPORACAO * feromonio[j][i]) + (Q / fitnessMelhorFormiga);
 			feromonio[j][i] = corrigirFeromonio(feromonio[j][i]);
 		}
 	}
@@ -177,7 +177,7 @@ void selecionarMelhorFormiga(formiga *colonia) {
 
 	for (int i=0; i < N_FORMIGAS ; ++i) {
 		if(colonia[i].fitness < melhor->fitness) {
-			melhor = &colonia[i]; 	
+			melhor = &colonia[i];
 		}
 	}
 
@@ -201,10 +201,11 @@ void mostraFormiga(formiga *formiga) {
 //		-----------------######	FUNCOES DE OPERACAO	#####-----------------		//
 
 void leArquivo(char Nome[]) {
-	FILE *arquivo = fopen(Nome, "r"); // cria ou abre o arquivo
+	FILE *arquivo; // cria ou abre o arquivo
+	arquivo = fopen(Nome, "r");
 	if(arquivo == NULL){ // testa se o arquivo foi aberto com sucesso
 		printf("\n\nImpossivel abrir o arquivo!\n\n");
-		return;
+		exit(1);
     }
 
 	int job, maq, s, u, b;
