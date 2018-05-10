@@ -4,11 +4,11 @@
 #include <windows.h>
 
 int main() {
-	leArquivo("InstanciaFlowShop.txt");
+	leArquivo("Source/InstanciasFlowShop/ta001.txt");
 
 	printf("	OTIMIZACAO COLONIA DE FORMIGAS\n");
 	/** PSEUDOCODIGO
-	 * IN: FORMIGA INICIAl, FEROMONIO INICIAL
+	 * IN: FORMIGA INICIAL, FEROMONIO INICIAL
 	 * 
 	 * MELHOR FORMIGA: SELECIONA_MELHOR(FORMIGAS INICIAIS)
 	 * -LOOP: GERAÇÕES (1..G)
