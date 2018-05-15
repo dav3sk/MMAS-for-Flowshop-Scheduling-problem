@@ -6,9 +6,12 @@
 #include <math.h>
 #include <string.h>
 
-#define N_FORMIGAS 5
 #define Q 1.0
-#define TAXA_EVAPORACAO 0.75
+
+// Arguemntos
+int GERACOES;
+int N_FORMIGAS; // 5
+float TAXA_EVAPORACAO; // 0.75
 
 double **feromonio;
 int **tempo;
@@ -49,5 +52,7 @@ void leArquivo(char Nome[]);
 int makeSpan(int solucao[N_JOBS]);
 
 void resultados(formiga *colonia);
+void gravarResultados();
+void configurarArgumentos(int argc, char *argv[]);
 
 #endif // ANT_H_
