@@ -1,12 +1,12 @@
 #include <stdio.h>	
 #include <stdlib.h>
 #include "Ant.h"
-#include <windows.h>
 
-int main() {
+int main(int argc, char *argv[]) {
+	configurarArgumentos(argc, argv);
 	leArquivo("Source/InstanciasFlowShop/ta001.txt");
 
-	printf("	OTIMIZACAO COLONIA DE FORMIGAS\n");
+	printf(" >OTIMIZACAO COLONIA DE FORMIGAS [N_FORMIGAS=%d ; TAXA_EVAPORACAO=%.3f ; GERACOES=%d]\n", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES);
 	/** PSEUDOCODIGO
 	 * IN: FORMIGA INICIAL, FEROMONIO INICIAL
 	 * 
@@ -26,16 +26,13 @@ int main() {
 
 	inicializarFeromonio();
 
-	mostrarFeromonio();
-	printf("Melhor formiga inicial = ");
-	mostraFormiga(melhorFormiga);
-
-	int gen;
-	printf("\nNumero de geracoes: ");
-	scanf("%d", &gen);
+	//mostrarFeromonio();
+	//printf("\nMelhor formiga inicial = ");
+	//mostraFormiga(melhorFormiga);
 
 	// FOR DE GERAÇÔES
-	for(int g=0 ; g < gen ; ++g) {
+	printf("\n >Buscando...");
+	for(int g=0 ; g < GERACOES ; ++g) {
 		for(int n=0 ; n < N_FORMIGAS ; ++n) {
 			colonia[n] = construirFormiga();
 		}
@@ -45,7 +42,6 @@ int main() {
 	}
 
 	resultados(colonia);
-	
-	system("pause");
-	return 0;
+
+	return melhorFormigaGlobal.fitness;
 }

@@ -54,7 +54,7 @@ void atualizarFeromonio() {
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		for(int i=0 ; i < N_JOBS ; ++i) {
-			feromonio[j][i] = (TAXA_EVAPORACAO * feromonio[j][i]) + (Q / fitnessMelhorFormiga);
+			feromonio[j][i] = (TAXA_EVAPORACAO * feromonio[j][i]) + (1 / fitnessMelhorFormiga);
 			feromonio[j][i] = corrigirFeromonio(feromonio[j][i]);
 		}
 	}
@@ -235,21 +235,19 @@ void leArquivo(char Nome[]) {
 			// Enquanto nao encontra ':' não faz nada
 		}
 
-		printf("\nLeitura da instancia: \n");
-		printf("N Jobs = %d : N Maquinas = %d\n", N_JOBS, N_MAQ);
+		//printf("\nLeitura da instancia: \n");
+		//printf("N Jobs = %d : N Maquinas = %d\n", N_JOBS, N_MAQ);
 		for(int m=0 ; m < maq ; ++m){
 			for(int j=0 ; j < job ; ++j){
 				int aux;
 				fscanf(arquivo,"%d", &aux);
 				tempo[m][j] = aux;
-				printf("%3d ", tempo[m][j]);
+				//printf("%3d ", tempo[m][j]);
 			}
-			printf("\n");
+			//printf("\n");
 		}
 	}
 	fclose(arquivo);
-	system("pause");
-	system("cls");
 }
 
 int makeSpan(int solucao[N_JOBS]) {
@@ -306,35 +304,35 @@ int makeSpan(int solucao[N_JOBS]) {
 }
 
 void resultados(formiga *colonia) {
-	printf("\n		RESULTADOS\n");
+	printf("\n >RESULTADOS\n");
 	
 	fim = clock();
-	printf("\n>Colonia:");
-	double media = 0;
-	for(int i=0 ; i < N_FORMIGAS ; ++i) {
-		printf("\nF%d = ", i);
-		mostraFormiga(&colonia[i]);
-		media += colonia[i].fitness;
-	}
-
-	printf("\n");
-	//mostrarFeromonio();
-    printf(">Tempo de execucao: %.2lfm", (((double)fim - (double)inicio)/CLOCKS_PER_SEC)/60 );
-	printf("\n>Melhor formiga = ");
+    printf(" >Tempo de execucao: %.2lfm", (((double)fim - (double)inicio)/CLOCKS_PER_SEC)/60 );
+	printf("\n >Melhor formiga = ");
 	mostraFormiga(&melhorFormigaGlobal);
 	
-	printf("\n>Fitness medio = %.2lf\n\n", media/N_FORMIGAS);
+	gravarResultados();
 }
 
-// FUNÇÔES DE TESTE
+void gravarResultados() {
+	FILE *arqResult;
+	char Nome[20];
+	
+	arqResult = fopen("Source/Testes/ta001.txt", "a+");
+	if(!arqResult) {
+		printf("\n\nImpossivel gravar em arquivo.\n\n");
+	}
+	fprintf(arqResult, "%d\n", melhorFormigaGlobal.fitness);
+	fclose(arqResult);
+}
 
-// Testa somatorio para formula de escolha de job
-void testeSoma() {
-	int jobsEscolhidos[N_JOBS];
-	for(int i=0;i<N_JOBS;++i)
-		jobsEscolhidos[i] = i+1;
+void configurarArgumentos(int argc, char *argv[]) {
+	if(argc != 4) {
+		printf("\n\nArgumentos invalidos (N_FORMIGAS, TAXA_EVAPORACAO, GERACOES).\n\n");
+		exit(1);
+	}
 
-	jobsEscolhidos[0] = -1;
-	double soma =  somatorioCondicional(feromonio[1], jobsEscolhidos, N_JOBS);
-	printf("\nSomatorio = %lf", soma);
+	N_FORMIGAS = atoi(argv[1]);
+	TAXA_EVAPORACAO = atof(argv[2]);
+	GERACOES = atoi(argv[3]);
 }
