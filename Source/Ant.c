@@ -235,16 +235,12 @@ void leArquivo(char Nome[]) {
 			// Enquanto nao encontra ':' não faz nada
 		}
 
-		//printf("\nLeitura da instancia: \n");
-		//printf("N Jobs = %d : N Maquinas = %d\n", N_JOBS, N_MAQ);
 		for(int m=0 ; m < maq ; ++m){
 			for(int j=0 ; j < job ; ++j){
 				int aux;
 				fscanf(arquivo,"%d", &aux);
 				tempo[m][j] = aux;
-				//printf("%3d ", tempo[m][j]);
 			}
-			//printf("\n");
 		}
 	}
 	fclose(arquivo);
