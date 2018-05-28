@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "Ant.h"
 #include "AntUTIL.h"
 
@@ -48,9 +49,9 @@ void atualizarFeromonioMaxMin() {
 void atualizarFeromonio() {
 	int fitnessMelhorFormiga = melhorFormiga->fitness;
 
-	// for(int j=0 ; j < N_JOBS ; ++j) {
-	// 	feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
-	// }
+	for(int j=0 ; j < N_JOBS ; ++j) {
+		feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
+	}
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		for(int i=0 ; i < N_JOBS ; ++i) {
@@ -200,9 +201,13 @@ void mostraFormiga(formiga *formiga) {
 
 //		-----------------######	FUNCOES DE OPERACAO	#####-----------------		//
 
-void leArquivo(char Nome[]) {
+void leArquivo() {
 	FILE *arquivo; // cria ou abre o arquivo
-	arquivo = fopen(Nome, "r");
+
+	char local[45] = "Source/InstanciasFlowShop/";
+	strcat(local, ARQUIVO);
+
+	arquivo = fopen(local, "r");
 	if(arquivo == NULL){ // testa se o arquivo foi aberto com sucesso
 		printf("\n\nImpossivel abrir o arquivo!\n\n");
 		exit(1);
@@ -312,23 +317,33 @@ void resultados(formiga *colonia) {
 
 void gravarResultados() {
 	FILE *arqResult;
-	char Nome[20];
+	char local[25] = "Source/Testes/";
+	strcat(local, ARQUIVO);
 	
-	arqResult = fopen("Source/Testes/ta001.txt", "a+");
+	arqResult = fopen(local, "a+");
 	if(!arqResult) {
 		printf("\n\nImpossivel gravar em arquivo.\n\n");
+		return;
 	}
+
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+
+	fprintf(arqResult, "(%d-%02d-%02d %02d:%02d:%02d)		", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
 	fprintf(arqResult, "%d\n", melhorFormigaGlobal.fitness);
 	fclose(arqResult);
 }
 
 void configurarArgumentos(int argc, char *argv[]) {
-	if(argc != 4) {
-		printf("\n\nArgumentos invalidos (N_FORMIGAS, TAXA_EVAPORACAO, GERACOES).\n\n");
+	if(argc != 5) {
+		printf("\n\nArgumentos invalidos (N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, ARQUIVO).\n\n");
 		exit(1);
 	}
 
 	N_FORMIGAS = atoi(argv[1]);
 	TAXA_EVAPORACAO = atof(argv[2]);
 	GERACOES = atoi(argv[3]);
+	ARQUIVO = argv[4];
+	printf(" >OTIMIZACAO COLONIA DE FORMIGAS [N_FORMIGAS=%d ; TAXA_EVAPORACAO=%.3f ; GERACOES=%d ; ARQUIVO=%s]\n", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, ARQUIVO);
 }

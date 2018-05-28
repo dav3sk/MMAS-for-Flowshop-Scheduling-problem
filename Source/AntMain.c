@@ -4,9 +4,8 @@
 
 int main(int argc, char *argv[]) {
 	configurarArgumentos(argc, argv);
-	leArquivo("Source/InstanciasFlowShop/ta110.txt");
+	leArquivo();
 	
-	printf(" >OTIMIZACAO COLONIA DE FORMIGAS [N_FORMIGAS=%d ; TAXA_EVAPORACAO=%.3f ; GERACOES=%d]\n", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES);
 	/** PSEUDOCODIGO
 	 * IN: FORMIGA INICIAL, FEROMONIO INICIAL
 	 * 

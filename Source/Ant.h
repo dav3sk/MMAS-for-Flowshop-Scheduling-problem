@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <time.h>
 #include <math.h>
-#include <string.h>
 
 #define Q 1.0
 
@@ -12,6 +11,7 @@
 int GERACOES;
 int N_FORMIGAS; // 5
 float TAXA_EVAPORACAO; // 0.75
+char* ARQUIVO;
 
 double **feromonio;
 int **tempo;
@@ -48,7 +48,7 @@ void selecionarMelhorFormiga(formiga *colonia);
 void selecionarMelhorGlobal();
 void mostraFormiga(formiga *individuo);
 
-void leArquivo(char Nome[]);
+void leArquivo();
 int makeSpan(int solucao[N_JOBS]);
 
 void resultados(formiga *colonia);
