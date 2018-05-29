@@ -11,18 +11,19 @@
 int GERACOES;
 int N_FORMIGAS; // 5
 float TAXA_EVAPORACAO; // 0.75
-char* ARQUIVO;
+char* ARQUIVO; // taXXX.txt
 
 double **feromonio;
 int **tempo;
 int *problema;
+int GERACAOSOLUCAO; // geracao em que a melhor solucao foi encontrada
 
 int N_MAQ;
 int N_JOBS;
 double FEROMONIO_MAX;
 double FEROMONIO_MIN;
 
-typedef struct individuo{
+typedef struct Formiga {
 	int *solucao;
 	int fitness;
 } formiga;
@@ -45,7 +46,7 @@ void copiarFormiga(formiga* destino, formiga *fonte);
 void avaliarFormiga(formiga *formiga);
 formiga construirFormiga();
 void selecionarMelhorFormiga(formiga *colonia);
-void selecionarMelhorGlobal();
+void selecionarMelhorGlobal(int iteracao);
 void mostraFormiga(formiga *individuo);
 
 void leArquivo();
