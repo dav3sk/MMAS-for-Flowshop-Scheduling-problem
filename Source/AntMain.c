@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 			colonia[n] = construirFormiga();
 		}
 		selecionarMelhorFormiga(colonia);
-		selecionarMelhorGlobal();
+		selecionarMelhorGlobal(g);
 		atualizarFeromonio();
 	}
 
