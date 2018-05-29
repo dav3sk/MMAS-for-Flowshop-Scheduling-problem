@@ -185,9 +185,10 @@ void selecionarMelhorFormiga(formiga *colonia) {
 	melhorFormiga = melhor;
 }
 
-void selecionarMelhorGlobal() {
+void selecionarMelhorGlobal(int iteracao) {
 	if(melhorFormiga->fitness < melhorFormigaGlobal.fitness) {
 		copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
+		GERACAOSOLUCAO = iteracao;
 		atualizarFeromonioMaxMin();
 	}
 }
@@ -311,6 +312,7 @@ void resultados(formiga *colonia) {
     printf(" >Tempo de execucao: %.2lfm", (((double)fim - (double)inicio)/CLOCKS_PER_SEC)/60 );
 	printf("\n >Melhor formiga = ");
 	mostraFormiga(&melhorFormigaGlobal);
+	printf("\n >Encontrada na geracao = %d", GERACAOSOLUCAO);
 	
 	gravarResultados();
 }
@@ -330,8 +332,8 @@ void gravarResultados() {
 	struct tm tm = *localtime(&t);
 
 	fprintf(arqResult, "(%d-%02d-%02d %02d:%02d:%02d)		", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-
-	fprintf(arqResult, "%d\n", melhorFormigaGlobal.fitness);
+	fprintf(arqResult, "%d", melhorFormigaGlobal.fitness);
+	fprintf(arqResult, "		%d\n", GERACAOSOLUCAO);
 	fclose(arqResult);
 }
 
