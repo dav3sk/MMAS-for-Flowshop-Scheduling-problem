@@ -47,7 +47,13 @@ void atualizarFeromonioMaxMin() {
 }
 
 void atualizarFeromonio() {
-	int fitnessMelhorFormiga = melhorFormiga->fitness;
+	float prob = (((float)rand()/(float)(RAND_MAX)) * 1.0);
+	int fitnessMelhorFormiga;
+	if(prob > TAXAGLOBAL) {
+		fitnessMelhorFormiga = melhorFormigaGlobal.fitness;
+	} else {
+		fitnessMelhorFormiga = melhorFormiga->fitness;
+	}
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
@@ -162,7 +168,6 @@ formiga construirFormiga() {
 
 		jobsEscolhidos[j] = job;
 		formiga.solucao[j] = job;
-//		getch();
 	}
 
 	avaliarFormiga(&formiga);
@@ -185,10 +190,10 @@ void selecionarMelhorFormiga(formiga *colonia) {
 	melhorFormiga = melhor;
 }
 
-void selecionarMelhorGlobal(int iteracao) {
+void selecionarMelhorGlobal(int geracao) {
 	if(melhorFormiga->fitness < melhorFormigaGlobal.fitness) {
 		copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
-		GERACAOSOLUCAO = iteracao;
+		GERACAOSOLUCAO = geracao;
 		atualizarFeromonioMaxMin();
 	}
 }

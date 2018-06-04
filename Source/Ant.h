@@ -6,8 +6,8 @@
 #include <math.h>
 
 #define Q 1.0
+#define TAXAGLOBAL 0.5 // Taxa em que o melhor global ira atualizar o feromonio
 
-// Arguemntos
 int GERACOES;
 int N_FORMIGAS; // 5
 float TAXA_EVAPORACAO; // 0.75
@@ -16,10 +16,11 @@ char* ARQUIVO; // taXXX.txt
 double **feromonio;
 int **tempo;
 int *problema;
-int GERACAOSOLUCAO; // geracao em que a melhor solucao foi encontrada
 
+int GERACAOSOLUCAO; // geracao em que a melhor solucao foi encontrada
 int N_MAQ;
 int N_JOBS;
+
 double FEROMONIO_MAX;
 double FEROMONIO_MIN;
 
@@ -46,7 +47,7 @@ void copiarFormiga(formiga* destino, formiga *fonte);
 void avaliarFormiga(formiga *formiga);
 formiga construirFormiga();
 void selecionarMelhorFormiga(formiga *colonia);
-void selecionarMelhorGlobal(int iteracao);
+void selecionarMelhorGlobal(int geracao);
 void mostraFormiga(formiga *individuo);
 
 void leArquivo();
