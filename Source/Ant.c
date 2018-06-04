@@ -47,7 +47,13 @@ void atualizarFeromonioMaxMin() {
 }
 
 void atualizarFeromonio() {
-	int fitnessMelhorFormiga = melhorFormiga->fitness;
+ 	float prob = (((float)rand()/(float)(RAND_MAX)) * 1.0);
+	int fitnessMelhorFormiga;
+	if(prob > TAXAGLOBAL) {
+		fitnessMelhorFormiga = melhorFormigaGlobal.fitness;
+	} else {
+		fitnessMelhorFormiga = melhorFormiga->fitness;
+	}
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
@@ -162,7 +168,6 @@ formiga construirFormiga() {
 
 		jobsEscolhidos[j] = job;
 		formiga.solucao[j] = job;
-//		getch();
 	}
 
 	avaliarFormiga(&formiga);
@@ -185,10 +190,10 @@ void selecionarMelhorFormiga(formiga *colonia) {
 	melhorFormiga = melhor;
 }
 
-void selecionarMelhorGlobal(int iteracao) {
+void selecionarMelhorGlobal(int geracao) {
 	if(melhorFormiga->fitness < melhorFormigaGlobal.fitness) {
 		copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
-		GERACAOSOLUCAO = iteracao;
+		GERACAOSOLUCAO = geracao;
 		atualizarFeromonioMaxMin();
 	}
 }
@@ -254,7 +259,7 @@ void leArquivo() {
 
 int makeSpan(int solucao[N_JOBS]) {
 	int termina[N_MAQ][N_JOBS];
-	int makespan = 0, maior = 0;
+	int makespan = 0;
 
 	// inicializa matriz termina  (j = jobs ; m = maquinas)
 	for (int m=0; m < N_MAQ; ++m) {
@@ -263,34 +268,13 @@ int makeSpan(int solucao[N_JOBS]) {
 		}
 	}
 
-	// ajusta a matriz tempo a solução atual
-	int aux[N_MAQ][N_JOBS];
-
-	for (int m=0; m < N_MAQ ; ++m) {
-		for (int j=0; j < N_JOBS; ++j) {
-			aux[m][j] = tempo[m][solucao[j] - 1];
-		}
-	}
-	for (int m=0; m < N_MAQ; ++m) {
-		for (int j=0; j < N_JOBS; ++j) {
-			tempo[m][j] = aux[m][j];
-		}
-	}
-
 	// calcula o tempo de cada maquina
 	for (int m=0; m < N_MAQ; ++m) {
 		for (int j=0; j < N_JOBS; ++j) {
-			int valor_1 = 0, valor_2 = 0;
+			int valor_1 = m > 0 ? termina[m-1][j] : 0;
+			int valor_2 = j > 0 ? termina[m][j-1] : 0;
 
-			if(j == 0 && m == 0) {
-
-			}
-			else {
-				if(m != 0) valor_1 = termina[m-1][j];
-				if(j != 0) valor_2 = termina[m][j-1];
-			}
-
-			termina[m][j] = max(valor_1, valor_2) + tempo[m][j];
+			termina[m][j] = max(valor_1, valor_2) + tempo[m][solucao[j] - 1];
 		}
 	}
 
