@@ -6,7 +6,6 @@
 #include <math.h>
 
 #define Q 1.0
-#define TAXAGLOBAL 0.5 // Taxa em que o melhor global ira atualizar o feromonio
 
 int GERACOES;
 int N_FORMIGAS; // 5
@@ -18,8 +17,9 @@ int **tempo;
 int *problema;
 
 int GERACAOSOLUCAO; // geracao em que a melhor solucao foi encontrada
-int N_MAQ;
-int N_JOBS;
+int N_MAQ; // Numero de maquinas
+int N_JOBS; // Numero de jobs
+float PROB_GLOBAL; // Probabilidade do melhor global atualizar o feromonio
 
 double FEROMONIO_MAX;
 double FEROMONIO_MIN;
