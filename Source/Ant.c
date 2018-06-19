@@ -23,6 +23,8 @@ void configurarFormigas(formiga *colonia) {
 	selecionarMelhorFormiga(colonia);
 	gerarFormiga(&melhorFormigaGlobal);
 	copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
+	//printf("\n Formiga inicial: ");
+	//mostraFormiga(melhorFormiga);
 }
 
 void inicializarFeromonio() {
@@ -49,7 +51,7 @@ void atualizarFeromonioMaxMin() {
 void atualizarFeromonio() {
  	float prob = (((float)rand()/(float)(RAND_MAX)) * 1.0);
 	int fitnessMelhorFormiga;
-	if(prob > TAXAGLOBAL) {
+	if(prob < PROB_GLOBAL) {
 		fitnessMelhorFormiga = melhorFormigaGlobal.fitness;
 	} else {
 		fitnessMelhorFormiga = melhorFormiga->fitness;
@@ -61,7 +63,7 @@ void atualizarFeromonio() {
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		for(int i=0 ; i < N_JOBS ; ++i) {
-			feromonio[j][i] = (TAXA_EVAPORACAO * feromonio[j][i]) + (1 / fitnessMelhorFormiga);
+			feromonio[j][i] = ((1 - TAXA_EVAPORACAO) * feromonio[j][i]) + (1 / fitnessMelhorFormiga);
 			feromonio[j][i] = corrigirFeromonio(feromonio[j][i]);
 		}
 	}
@@ -308,28 +310,30 @@ void gravarResultados() {
 	
 	arqResult = fopen(local, "a+");
 	if(!arqResult) {
-		printf("\n\nImpossivel gravar em arquivo.\n\n");
+		printf("\n\nImpossivel gravar resultados em arquivo.\n\n");
 		return;
 	}
 
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
+	// time_t t = time(NULL);
+	// struct tm tm = *localtime(&t);
 
-	fprintf(arqResult, "(%d-%02d-%02d %02d:%02d:%02d)		", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-	fprintf(arqResult, "%d", melhorFormigaGlobal.fitness);
-	fprintf(arqResult, "		%d\n", GERACAOSOLUCAO);
+	fprintf(arqResult, "(Nf:%d TxE:%.3f G:%d PG:%.3f)	", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, PROB_GLOBAL);
+	fprintf(arqResult, "%d	", melhorFormigaGlobal.fitness);
+	fprintf(arqResult, "%.2f	", ((double)fim - (double)inicio)/CLOCKS_PER_SEC);
+	fprintf(arqResult, "%d	\n", GERACAOSOLUCAO);
 	fclose(arqResult);
 }
 
 void configurarArgumentos(int argc, char *argv[]) {
-	if(argc != 5) {
-		printf("\n\nArgumentos invalidos (N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, ARQUIVO).\n\n");
+	if(argc != 6) {
+		printf("\n\nArgumentos invalidos (N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, PROBABILIDADE_GLOBAL, ARQUIVO).\n\n");
 		exit(1);
 	}
 
 	N_FORMIGAS = atoi(argv[1]);
 	TAXA_EVAPORACAO = atof(argv[2]);
 	GERACOES = atoi(argv[3]);
-	ARQUIVO = argv[4];
-	printf(" >OTIMIZACAO COLONIA DE FORMIGAS [N_FORMIGAS=%d ; TAXA_EVAPORACAO=%.3f ; GERACOES=%d ; ARQUIVO=%s]\n", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, ARQUIVO);
+	PROB_GLOBAL = atof(argv[4]);
+	ARQUIVO = argv[5];
+	printf(" >OTIMIZACAO COLONIA DE FORMIGAS [FORMIGAS=%d ; EVAPORACAO=%.3f ; GERACOES=%d ; GLOBAL=%.2f ; ARQUIVO=%s]\n", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, PROB_GLOBAL, ARQUIVO);
 }

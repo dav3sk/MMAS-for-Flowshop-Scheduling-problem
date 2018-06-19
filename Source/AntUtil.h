@@ -13,10 +13,12 @@ void misturarVetor(int *vetor, int tamanho){
 	size_t i;
 	srand(time(NULL));
 	for (i = 0; i < tamanho; ++i) {
-		size_t j = i + rand() / (RAND_MAX / (tamanho - i) + 1);
-		int t = vetor[j];
-		vetor[j] = vetor[i];
-		vetor[i] = t;
+		for(int k=0 ; k < 5 ; ++k) {
+			size_t j = i + rand() / (RAND_MAX / (tamanho - i) + 1);
+			int t = vetor[j];
+			vetor[j] = vetor[i];
+			vetor[i] = t;
+		}
 	}
 }
 
