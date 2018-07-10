@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "Ant.h"
 #include "AntUTIL.h"
 
@@ -295,7 +296,7 @@ void resultados(formiga *colonia) {
 	printf("\n >RESULTADOS\n");
 	
 	fim = clock();
-    printf(" >Tempo de execucao: %.2lfm", (((double)fim - (double)inicio)/CLOCKS_PER_SEC)/60 );
+    printf(" >Tempo de execucao: %.2fs", (((double)fim - (double)inicio)/CLOCKS_PER_SEC));
 	printf("\n >Melhor formiga = ");
 	mostraFormiga(&melhorFormigaGlobal);
 	printf("\n >Encontrada na geracao = %d", GERACAOSOLUCAO);
