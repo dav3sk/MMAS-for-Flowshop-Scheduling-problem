@@ -1,11 +1,13 @@
 #include <stdio.h>	
 #include <stdlib.h>
+
 #include "Ant.h"
+#include "LocalSearch.h"
 
 int main(int argc, char *argv[]) {
 	configurarArgumentos(argc, argv);
 	leArquivo();
-	
+
 	/** PSEUDOCODIGO
 	 * IN: FORMIGA INICIAL, FEROMONIO INICIAL
 	 * 
@@ -31,6 +33,7 @@ int main(int argc, char *argv[]) {
 		for(int n=0 ; n < N_FORMIGAS ; ++n) {
 			colonia[n] = construirFormiga();
 		}
+		localSearch(melhorFormiga);
 		selecionarMelhorFormiga(colonia);
 		selecionarMelhorGlobal(g);
 		atualizarFeromonio();
@@ -38,5 +41,5 @@ int main(int argc, char *argv[]) {
 
 	resultados(colonia);
 
-	return melhorFormigaGlobal.fitness;
+	// return melhorFormigaGlobal.fitness;
 }
