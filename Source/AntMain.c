@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 	printf("\n >Buscando...");
 	for(int g=0 ; g < GERACOES ; ++g) {
 		for(int n=0 ; n < N_FORMIGAS ; ++n) {
-			colonia[n] = construirFormiga();
+			colonia[n] = construirFormiga(colonia[n]);
 		}
 		localSearch(melhorFormiga);
 		selecionarMelhorFormiga(colonia);
