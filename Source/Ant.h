@@ -26,6 +26,7 @@ double FEROMONIO_MIN;
 
 typedef struct Formiga {
 	int *solucao;
+	int *memoria; // armazena o caminho parcial percorrido
 	int fitness;
 } formiga;
 
@@ -45,7 +46,7 @@ void mostrarColonia(formiga *colonia);
 void gerarFormiga(formiga* novaFormiga);
 void copiarFormiga(formiga* destino, formiga *fonte);
 void avaliarFormiga(formiga *formiga);
-formiga construirFormiga();
+formiga construirFormiga(formiga formiga);
 void selecionarMelhorFormiga(formiga *colonia);
 void selecionarMelhorGlobal(int geracao);
 void mostraFormiga(formiga *individuo);
