@@ -9,7 +9,6 @@
 clock_t inicio, fim;
 
 void gerarFormigasIniciais(formiga *colonia) {
-	inicio = clock();
 	for(int i=0 ; i < N_FORMIGAS ; ++i) {
 		gerarFormiga(&colonia[i]);
 		misturarVetor(problema, N_JOBS);
@@ -42,6 +41,8 @@ void inicializarFeromonio() {
 			feromonio[m][j] = FEROMONIO_MAX;
 		}
 	}
+
+	inicio = clock();
 }
 
 void atualizarFeromonioMaxMin() {
@@ -111,6 +112,7 @@ void mostrarColonia(formiga *colonia) {
 
 void gerarFormiga(formiga* novaFormiga) {
 	novaFormiga->solucao = malloc(sizeof(int) * N_JOBS);
+	novaFormiga->memoria = malloc(sizeof(int) * N_JOBS);
 	novaFormiga->fitness = 0;
 }
 
@@ -127,14 +129,9 @@ void avaliarFormiga(formiga *formiga) {
 	formiga->fitness += makeSpan(formiga->solucao);
 }
 
-formiga construirFormiga() {
-	formiga formiga;
-	gerarFormiga(&formiga);
-
-	int *jobsEscolhidos;
-	jobsEscolhidos = malloc(sizeof(int) * N_JOBS);
+formiga construirFormiga(formiga formiga) {
 	for(int i=0 ; i < N_JOBS ; ++i) {
-		jobsEscolhidos[i] = -1;
+		formiga.memoria[i] = -1; // aplica amnesia na formiga
 	}
 	//printf("\n>> CONSTRUINDO FORMIGA\n");
 	for(int j=0 ; j < N_JOBS ; ++j) {
@@ -144,8 +141,8 @@ formiga construirFormiga() {
 		// Calcula probabilidade dos jobs possiveis
 //		printf("\n>Elemento [%d]:", j);
 		for(int p=0 ; p < N_JOBS ; ++p) {
-			if(!estaContido(jobsEscolhidos, N_JOBS, p+1)) {
-				probabilidade[p] = (feromonio[j][p]) / ( (somatorioCondicional(feromonio[j], jobsEscolhidos, N_JOBS)));
+			if(!estaContido(formiga.memoria, N_JOBS, p+1)) {
+				probabilidade[p] = (feromonio[j][p]) / ( (somatorioCondicional(feromonio[j], formiga.memoria, N_JOBS)));
 			}
 			else {
 				probabilidade[p] = 0;
@@ -169,14 +166,11 @@ formiga construirFormiga() {
 //			printf("\n  JOB %d NEGADO", i+1);
 		}
 
-		jobsEscolhidos[j] = job;
+		formiga.memoria[j] = job;
 		formiga.solucao[j] = job;
 	}
 
 	avaliarFormiga(&formiga);
-
-	free(jobsEscolhidos);
-	jobsEscolhidos = NULL;
 
 	return formiga;
 }
