@@ -44,9 +44,9 @@ void avaliarColonia(formiga *colonia);
 void mostrarColonia(formiga *colonia);
 
 void gerarFormiga(formiga* novaFormiga);
-void copiarFormiga(formiga* destino, formiga *fonte);
+void copiarFormiga(formiga *destino, formiga *fonte);
 void avaliarFormiga(formiga *formiga);
-formiga construirFormiga(formiga formiga);
+void construirFormiga(formiga *formiga);
 void selecionarMelhorFormiga(formiga *colonia);
 void selecionarMelhorGlobal(int geracao);
 void mostraFormiga(formiga *individuo);

@@ -129,9 +129,9 @@ void avaliarFormiga(formiga *formiga) {
 	formiga->fitness += makeSpan(formiga->solucao);
 }
 
-formiga construirFormiga(formiga formiga) {
+void construirFormiga(formiga *formiga) {
 	for(int i=0 ; i < N_JOBS ; ++i) {
-		formiga.memoria[i] = -1; // aplica amnesia na formiga
+		formiga->memoria[i] = -1; // aplica amnesia na formiga
 	}
 	//printf("\n>> CONSTRUINDO FORMIGA\n");
 	for(int j=0 ; j < N_JOBS ; ++j) {
@@ -141,8 +141,8 @@ formiga construirFormiga(formiga formiga) {
 		// Calcula probabilidade dos jobs possiveis
 //		printf("\n>Elemento [%d]:", j);
 		for(int p=0 ; p < N_JOBS ; ++p) {
-			if(!estaContido(formiga.memoria, N_JOBS, p+1)) {
-				probabilidade[p] = (feromonio[j][p]) / ( (somatorioCondicional(feromonio[j], formiga.memoria, N_JOBS)));
+			if(!estaContido(formiga->memoria, N_JOBS, p+1)) {
+				probabilidade[p] = (feromonio[j][p]) / ( (somatorioCondicional(feromonio[j], formiga->memoria, N_JOBS)));
 			}
 			else {
 				probabilidade[p] = 0;
@@ -166,13 +166,11 @@ formiga construirFormiga(formiga formiga) {
 //			printf("\n  JOB %d NEGADO", i+1);
 		}
 
-		formiga.memoria[j] = job;
-		formiga.solucao[j] = job;
+		formiga->memoria[j] = job;
+		formiga->solucao[j] = job;
 	}
 
-	avaliarFormiga(&formiga);
-
-	return formiga;
+	avaliarFormiga(formiga);
 }
 
 void selecionarMelhorFormiga(formiga *colonia) {
