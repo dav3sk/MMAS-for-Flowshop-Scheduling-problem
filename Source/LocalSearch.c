@@ -11,7 +11,7 @@ void localSearch(formiga *alvo) {
     int pos_1 = (rand() % ((N_JOBS-1) + 1 - 0)) + 0; // (rand() % (max + 1 - min)) + min
     int solucao[N_JOBS];
     for(int j=0 ; j < N_JOBS ; ++j) {
-        solucao[j] = alvo->solucao[j];
+        solucao[j] = alvo->memoria[j];
     }
 
     //printf("\nPosicao 1 = '%d'", pos_1);
@@ -24,7 +24,7 @@ void localSearch(formiga *alvo) {
             //printf("\nMakespan = %d", novo_makespan);
             if (novo_makespan < alvo->fitness) { 
                 for(int j=0 ; j < N_JOBS ; ++j) {
-                    alvo->solucao[j] = nova_solucao[j]; // se for melhor, atribui para formiga alvo
+                    alvo->memoria[j] = nova_solucao[j]; // se for melhor, atribui para formiga alvo
                 }
                 alvo->fitness = novo_makespan;
             }
