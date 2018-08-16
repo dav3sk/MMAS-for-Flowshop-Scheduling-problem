@@ -13,7 +13,7 @@ void gerarFormigasIniciais(formiga *colonia) {
 		gerarFormiga(&colonia[i]);
 		misturarVetor(problema, N_JOBS);
 		for(int j=0 ; j < N_JOBS ; ++j){
-			colonia[i].solucao[j] = problema[j];
+			colonia[i].memoria[j] = problema[j];
 		}
 	}
 	avaliarColonia(colonia);
@@ -60,20 +60,18 @@ void atualizarFeromonio() {
 	}
 
 	for(int j=0 ; j < N_JOBS ; ++j) {
-		feromonio[j][melhorFormiga->solucao[j] - 1] += Q;
-	}
-
-	for(int j=0 ; j < N_JOBS ; ++j) {
 		for(int i=0 ; i < N_JOBS ; ++i) {
-			feromonio[j][i] = ((1 - TAXA_EVAPORACAO) * feromonio[j][i]) + (1 / fitnessMelhorFormiga);
-			feromonio[j][i] = corrigirFeromonio(feromonio[j][i]);
+			feromonio[j][i] = (TAXA_EVAPORACAO) * feromonio[j][i]; // Evapora
+			feromonio[j][i] += (1 / fitnessMelhorFormiga); // Deposita
+			feromonio[j][i] = corrigirFeromonio(feromonio[j][i]); // Corrige
 		}
 	}
 }
 
 double corrigirFeromonio(double feromonio) {
 	if(feromonio > FEROMONIO_MAX) {
-		return FEROMONIO_MAX;
+		double excesso = feromonio - FEROMONIO_MAX;
+		return FEROMONIO_MAX - excesso;
 	}
 	if(feromonio < FEROMONIO_MIN){
 		return FEROMONIO_MIN;
@@ -83,10 +81,10 @@ double corrigirFeromonio(double feromonio) {
 }
 
 void mostrarFeromonio() {
-	printf("\n>Feromonio [x10000 ; MAX=%02.0lf ; MIN=%02.0lf] \n", FEROMONIO_MAX*10000, FEROMONIO_MIN*10000);
+	printf("\n>Feromonio [x1000 ; MAX=%.3lf ; MIN=%.3lf] \n", FEROMONIO_MAX*1000, FEROMONIO_MIN*1000);
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		for(int i=0 ; i < N_JOBS ; ++i) {
-			printf("%02.0lf  ", feromonio[j][i] * 10000);
+			printf("%.1lf  ", feromonio[j][i]*1000);
 		}
 		printf("\n");
 	}
@@ -111,22 +109,20 @@ void mostrarColonia(formiga *colonia) {
 //		-----------------######	FUNCOES DE MANIPULACAO DE INDIVIDUO	#####-----------------		//
 
 void gerarFormiga(formiga* novaFormiga) {
-	novaFormiga->solucao = malloc(sizeof(int) * N_JOBS);
 	novaFormiga->memoria = malloc(sizeof(int) * N_JOBS);
 	novaFormiga->fitness = 0;
 }
 
 void copiarFormiga(formiga* destino, formiga *fonte) {
 	for(int j=0 ; j < N_JOBS ; ++j) {
-		destino->solucao = fonte->solucao;
+		destino->memoria = fonte->memoria;
 	}
 
 	destino->fitness = fonte->fitness;
 }
 
 void avaliarFormiga(formiga *formiga) {
-	formiga->fitness = 0;
-	formiga->fitness += makeSpan(formiga->solucao);
+	formiga->fitness = makeSpan(formiga->memoria);
 }
 
 void construirFormiga(formiga *formiga) {
@@ -167,7 +163,6 @@ void construirFormiga(formiga *formiga) {
 		}
 
 		formiga->memoria[j] = job;
-		formiga->solucao[j] = job;
 	}
 
 	avaliarFormiga(formiga);
@@ -195,7 +190,7 @@ void selecionarMelhorGlobal(int geracao) {
 
 void mostraFormiga(formiga *formiga) {
 	for(int j=0 ; j < N_JOBS ; ++j) {
-		printf("%2d ", formiga->solucao[j]);
+		printf("%2d ", formiga->memoria[j]);
 	}
 	printf(" - Fitness = %d", formiga->fitness);
 }
@@ -252,7 +247,7 @@ void leArquivo() {
 	fclose(arquivo);
 }
 
-int makeSpan(int solucao[N_JOBS]) {
+int makeSpan(int memoria[N_JOBS]) {
 	int termina[N_MAQ][N_JOBS];
 	int makespan = 0;
 
@@ -269,7 +264,7 @@ int makeSpan(int solucao[N_JOBS]) {
 			int valor_1 = m > 0 ? termina[m-1][j] : 0;
 			int valor_2 = j > 0 ? termina[m][j-1] : 0;
 
-			termina[m][j] = max(valor_1, valor_2) + tempo[m][solucao[j] - 1];
+			termina[m][j] = max(valor_1, valor_2) + tempo[m][memoria[j] - 1];
 		}
 	}
 
@@ -288,6 +283,7 @@ void resultados(formiga *colonia) {
 	printf("\n >RESULTADOS\n");
 	
 	fim = clock();
+	//mostrarFeromonio();
     printf(" >Tempo de execucao: %.2fs", (((double)fim - (double)inicio)/CLOCKS_PER_SEC));
 	printf("\n >Melhor formiga = ");
 	mostraFormiga(&melhorFormigaGlobal);
@@ -307,9 +303,7 @@ void gravarResultados() {
 		return;
 	}
 
-	// time_t t = time(NULL);
-	// struct tm tm = *localtime(&t);
-
+	//mostrarFeromonio();
 	fprintf(arqResult, "(Nf:%d TxE:%.3f G:%d PG:%.3f)	", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, PROB_GLOBAL);
 	fprintf(arqResult, "%d	", melhorFormigaGlobal.fitness);
 	fprintf(arqResult, "%.2f	", ((double)fim - (double)inicio)/CLOCKS_PER_SEC);
