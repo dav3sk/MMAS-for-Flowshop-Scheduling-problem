@@ -32,13 +32,13 @@ int main(int argc, char *argv[]) {
 		for(int n=0 ; n < N_FORMIGAS ; ++n) {
 			construirFormiga(&colonia[n]);
 		}
-		localSearch(melhorFormiga);
 		selecionarMelhorFormiga(colonia);
+		localSearch(melhorFormiga);
 		selecionarMelhorGlobal(g);
 		atualizarFeromonio();
 	}
-
+	
 	resultados(colonia);
 
-	// return melhorFormigaGlobal.fitness;
+	return 0;
 }
