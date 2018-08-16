@@ -25,7 +25,6 @@ double FEROMONIO_MAX;
 double FEROMONIO_MIN;
 
 typedef struct Formiga {
-	int *solucao;
 	int *memoria; // armazena o caminho parcial percorrido
 	int fitness;
 } formiga;
