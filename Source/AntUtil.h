@@ -25,7 +25,6 @@ void misturarVetor(int *vetor, int tamanho){
 int estaContido(int *vetor, int tam, int valor) {
 	for(int i=0 ; i < tam ; ++i) {
 		if(vetor[i] == valor) {
-			//printf("\n%d == %d", vetor[i], valor);
 			return 1;
 		}
 	}
@@ -34,15 +33,11 @@ int estaContido(int *vetor, int tam, int valor) {
 }
 
 double somatorioCondicional(double *vetor, int *excecoes, int tam) {
-	//printf("\nSomatorio: ");
 	double somatorio = 0.0;
 	for(int i=0 ; i < tam ; ++i) {
-		//printf("\n%d:", i);
 		if(!estaContido(excecoes, tam, i+1)) {
-			//printf("  %lf + %lf", somatorio, vetor[i]);
 			somatorio += vetor[i];
 		}
-		//printf("\n");
 	}
 
 	return somatorio;

@@ -5,8 +5,6 @@
 #include "LocalSearch.h"
 
 void localSearch(formiga *alvo) {
-    //printf("\nFormiga antes de busca local:");
-    //mostraFormiga(alvo);
     int nova_solucao[N_JOBS], novo_makespan;
     int pos_1 = (rand() % ((N_JOBS-1) + 1 - 0)) + 0; // (rand() % (max + 1 - min)) + min
     int solucao[N_JOBS];
@@ -17,22 +15,16 @@ void localSearch(formiga *alvo) {
     //printf("\nPosicao 1 = '%d'", pos_1);
     for (int i=0 ; i < N_JOBS ; ++i) {
         if (i != pos_1) {
-            //printf("\nTestando de '%d' para '%d'\n", i, pos_1);
             insertion_moves(solucao, nova_solucao, pos_1, i); // insere job[pos_1] em i
             novo_makespan = makeSpan(nova_solucao); // avalia nova solucao
-            //for (int n = 0; n < N_JOBS; n++) printf("%d ", nova_solucao[n]);
-            //printf("\nMakespan = %d", novo_makespan);
             if (novo_makespan < alvo->fitness) { 
                 for(int j=0 ; j < N_JOBS ; ++j) {
                     alvo->memoria[j] = nova_solucao[j]; // se for melhor, atribui para formiga alvo
                 }
                 alvo->fitness = novo_makespan;
             }
-            //printf("\n>================================================<\n");
         }
     }
-    //printf("\nFormiga depois de busca local:");
-    //mostraFormiga(alvo);
 }
 
 void insertion_moves(int *solucao, int *nova_solucao, int pos_1, int pos_2) {

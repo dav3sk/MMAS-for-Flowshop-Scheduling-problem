@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
 	inicializarFeromonio();
 
 	// FOR DE GERAÇÔES
-	printf("\n >Buscando...");
 	for(int g=0 ; g < GERACOES ; ++g) {
 		for(int n=0 ; n < N_FORMIGAS ; ++n) {
 			construirFormiga(&colonia[n]);

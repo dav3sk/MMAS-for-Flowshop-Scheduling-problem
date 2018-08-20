@@ -23,8 +23,6 @@ void configurarFormigas(formiga *colonia) {
 	selecionarMelhorFormiga(colonia);
 	gerarFormiga(&melhorFormigaGlobal);
 	copiarFormiga(&melhorFormigaGlobal, melhorFormiga);
-	//printf("\n Formiga inicial: ");
-	//mostraFormiga(melhorFormiga);
 }
 
 void inicializarFeromonio() {
@@ -135,7 +133,6 @@ void construirFormiga(formiga *formiga) {
 		int job = 1;
 
 		// Calcula probabilidade dos jobs possiveis
-//		printf("\n>Elemento [%d]:", j);
 		for(int p=0 ; p < N_JOBS ; ++p) {
 			if(!estaContido(formiga->memoria, N_JOBS, p+1)) {
 				probabilidade[p] = (feromonio[j][p]) / ( (somatorioCondicional(feromonio[j], formiga->memoria, N_JOBS)));
@@ -143,23 +140,19 @@ void construirFormiga(formiga *formiga) {
 			else {
 				probabilidade[p] = 0;
 			}
-//			printf("\n  Probabilidade job '%d' = %lf", p+1, probabilidade[p]);
 		}
 
 		// Escolhe um job
 		float aleatorio = (((float)rand()/(float)(RAND_MAX)) * 1.0);
-//		printf("\n  Aleatorio = %lf", aleatorio);
 		double limiteSuperior = 0.0;
 		double limiteInferior = 0.0;
 		for(int i=0 ; i < N_JOBS ; ++i) {
 			limiteSuperior += probabilidade[i];
 			if( (limiteInferior <= aleatorio) && (aleatorio < limiteSuperior) ) {
 				job = i + 1;
-//				printf("\n  JOB %d ESCOLHIDO\n", job);
 				break;
 			}
 			limiteInferior = probabilidade[i];
-//			printf("\n  JOB %d NEGADO", i+1);
 		}
 
 		formiga->memoria[j] = job;
@@ -192,7 +185,6 @@ void mostraFormiga(formiga *formiga) {
 	for(int j=0 ; j < N_JOBS ; ++j) {
 		printf("%2d ", formiga->memoria[j]);
 	}
-	printf(" - Fitness = %d", formiga->fitness);
 }
 
 //		-----------------######	FUNCOES DE OPERACAO	#####-----------------		//
@@ -280,14 +272,12 @@ int makeSpan(int memoria[N_JOBS]) {
 }
 
 void resultados(formiga *colonia) {
-	printf("\n >RESULTADOS\n");
 	
 	fim = clock();
-	//mostrarFeromonio();
-    printf(" >Tempo de execucao: %.2fs", (((double)fim - (double)inicio)/CLOCKS_PER_SEC));
-	printf("\n >Melhor formiga = ");
+    printf(" >Tempo de execucao = %.2fs", (((double)fim - (double)inicio)/CLOCKS_PER_SEC));
+	printf("\n >Melhor formiga = %d\n [", melhorFormigaGlobal.fitness);
 	mostraFormiga(&melhorFormigaGlobal);
-	printf("\n >Encontrada na geracao = %d", GERACAOSOLUCAO);
+	printf("]");
 	
 	gravarResultados();
 }
@@ -303,7 +293,6 @@ void gravarResultados() {
 		return;
 	}
 
-	//mostrarFeromonio();
 	fprintf(arqResult, "(Nf:%d TxE:%.3f G:%d PG:%.3f)	", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, PROB_GLOBAL);
 	fprintf(arqResult, "%d	", melhorFormigaGlobal.fitness);
 	fprintf(arqResult, "%.2f	", ((double)fim - (double)inicio)/CLOCKS_PER_SEC);
@@ -322,5 +311,4 @@ void configurarArgumentos(int argc, char *argv[]) {
 	GERACOES = atoi(argv[3]);
 	PROB_GLOBAL = atof(argv[4]);
 	ARQUIVO = argv[5];
-	printf(" >OTIMIZACAO COLONIA DE FORMIGAS [FORMIGAS=%d ; EVAPORACAO=%.3f ; GERACOES=%d ; GLOBAL=%.2f ; ARQUIVO=%s]\n", N_FORMIGAS, TAXA_EVAPORACAO, GERACOES, PROB_GLOBAL, ARQUIVO);
 }
