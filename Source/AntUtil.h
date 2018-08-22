@@ -1,7 +1,7 @@
 #ifndef ANTUTIL_H_
 #define ANTUTIL_H_
 
-#include <conio.h>
+//#include <conio.h>
 
 void misturarVetor(int *vetor, int tamanho); // Retirado de: https://benpfaff.org/writings/clc/shuffle.html
 int max(int valor_1, int valor_2);

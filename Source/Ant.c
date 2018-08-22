@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "Ant.h"
-#include "AntUTIL.h"
+#include "AntUtil.h"
 
 //		-----------------######	FUNCOES DE MANIPULACAO DE COLONIA	#####-----------------		//
 clock_t inicio, fim;
